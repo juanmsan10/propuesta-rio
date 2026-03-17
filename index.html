@@ -354,12 +354,12 @@
       position: relative; z-index: 1; background: transparent;
     }
     .prop-cta-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 0 2.25rem; height: 52px;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 0 2.25rem; height: 56px;
       background: #7ef474; color: #0a1f09;
       border: none;
       border-radius: 8px; font-family: var(--sans);
-      font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.08em;
       text-transform: uppercase; text-decoration: none;
       position: relative; z-index: 1; transition: all 0.2s;
       cursor: pointer;
@@ -930,7 +930,7 @@ function renderProposal(p) {
           <div class="prop-cta-eyebrow">El siguiente paso</div>
           <div class="prop-cta-titulo">${p.cta_titulo||'En 4 semanas tu negocio opera sin depender de ti.'}</div>
           <div class="prop-cta-sub">${p.cta_sub||'Ya tienes el diagnóstico. El siguiente paso es arrancar el proyecto.'}</div>
-          <button class="prop-cta-btn" onclick="alert('Redirigir al formulario de contrato / pago')">COMENCEMOS</button>
+          <button class="prop-cta-btn" onclick="alert('Redirigir al formulario de contrato / pago')">COMENCEMOS →</button>
         </div>
       </div>
     </div>
@@ -944,9 +944,8 @@ function printPDF() {
   const html = document.getElementById('proposal-text').innerHTML;
   const empresa = (analysisData||{}).empresa || 'Cliente';
   const fecha = new Date().toLocaleDateString('es-CO', { year:'numeric', month:'long', day:'numeric' });
-  const w = window.open('','_blank');
-  const styles = Array.from(document.styleSheets[0].cssRules).map(r => r.cssText).join('\n').replace(/var\(--[^)]+\)/g, '#1a1a18');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
+
+  const fullHTML = `<!DOCTYPE html><html><head><meta charset="utf-8">
   <title>Propuesta Río Abierto — ${empresa}</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -962,13 +961,12 @@ function printPDF() {
     .prop-empresa em { font-style: normal; color: #1e7018; }
     .prop-meta { font-size: 12px; color: #888; font-family: 'IBM Plex Mono', monospace; margin-bottom: 2rem; }
     .prop-espejo { background: #f8f7f4; border-left: 2px solid #1e7018; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 14px; color: #4e4e4a; line-height: 1.75; font-weight: 300; }
-    .prop-section-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
-    .prop-section-label::before { content: ''; width: 18px; height: 1px; background: #1e7018; }
+    .prop-section-wrap { margin-bottom: 1.5rem; }
+    .prop-section-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+    .prop-section-eyebrow::before { content: ''; width: 16px; height: 1px; background: #1e7018; }
+    .prop-section-h2 { font-size: 1.4rem; font-weight: 600; color: #1a1a18; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
     .prop-problema { border: 0.5px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 1.25rem; margin-bottom: 0.875rem; position: relative; overflow: hidden; }
-    .prop-problema::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-    .prop-p1::before { background: #1e7018; }
-    .prop-p2::before { background: #1e7018; }
-    .prop-p3::before { background: #1e7018; }
+    .prop-problema::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #1e7018; }
     .prop-nivel-tag { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 2px 10px; border-radius: 20px; margin-bottom: 0.625rem; }
     .prop-n1 { background: rgba(30,112,24,0.08); color: #1e7018; }
     .prop-n2 { background: rgba(74,128,232,0.08); color: #4a80e8; }
@@ -986,31 +984,29 @@ function printPDF() {
     .prop-fase-titulo { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
     .prop-fase-desc { font-size: 11px; color: #888; line-height: 1.5; font-weight: 300; }
     .prop-cotizacion { margin-bottom: 2.5rem; }
-    .prop-cot-table { width: 100%; border-collapse: collapse; margin-bottom: 0; }
-    .prop-cot-table thead tr { border-bottom: 1px solid rgba(0,0,0,0.12); }
-    .prop-cot-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #888882; text-transform: uppercase; letter-spacing: 0.1em; padding: 0 0 0.625rem; text-align: left; font-weight: 500; }
-    .prop-cot-table th:last-child { text-align: right; }
+    .prop-cot-table { width: 100%; border-collapse: collapse; }
+    .prop-cot-table thead th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #888882; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; padding-bottom: 0.75rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.12); }
+    .prop-cot-table thead th:last-child { text-align: right; }
     .prop-cot-table tbody tr { border-bottom: 0.5px solid rgba(0,0,0,0.07); }
-    .prop-cot-table tbody tr:last-child { border-bottom: none; }
     .prop-cot-table td { padding: 1rem 0; vertical-align: top; }
-    .prop-cot-td-titulo { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; font-family: 'IBM Plex Sans', sans-serif; }
+    .prop-cot-td-titulo { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; }
     .prop-cot-td-nivel { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #888882; }
-    .prop-cot-td-precio { font-size: 16px; font-weight: 800; color: #1a1a18; font-family: 'IBM Plex Sans', sans-serif; white-space: nowrap; text-align: right; padding-top: 0.25rem; }
-    .prop-cot-total-row { border-top: 1.5px solid rgba(0,0,0,0.15) !important; margin-top: 0.5rem; }
-    .prop-cot-total-row td { padding-top: 1.25rem !important; }
-    .prop-cot-total-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #888882; }
-    .prop-cot-total-monto { font-size: 1.75rem; font-weight: 700; color: #1e7018; font-family: 'IBM Plex Sans', sans-serif; text-align: right; letter-spacing: -0.02em; }
+    .prop-cot-td-precio { font-size: 16px; font-weight: 800; color: #1a1a18; white-space: nowrap; text-align: right; }
+    .prop-cot-total-row td { padding-top: 1.25rem; border-top: 1.5px solid rgba(0,0,0,0.15); }
+    .prop-cot-total-label { font-size: 1.2rem; font-weight: 700; color: #1e7018; }
+    .prop-cot-total-monto { font-size: 1.6rem; font-weight: 700; color: #1e7018; text-align: right; letter-spacing: -0.02em; }
     .prop-cot-conditions { display: flex; gap: 2rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 0.5px solid rgba(0,0,0,0.09); }
-    .prop-cot-cond { flex: 1; }
     .prop-cot-cond-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
     .prop-cot-cond-val { font-size: 14px; color: #1a1a18; font-weight: 500; }
-    .prop-cta { background: #1a1a18; border-radius: 10px; padding: 1.5rem 1.75rem; text-align: center; }
-    .prop-cta-titulo { font-size: 16px; font-weight: 600; color: #f8f7f4; margin-bottom: 0.4rem; }
+    .prop-cta { background: #1a1a18; border-radius: 10px; padding: 2rem 2.5rem; text-align: center; }
+    .prop-cta-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7ef474; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem; }
+    .prop-cta-titulo { font-size: 1.4rem; font-weight: 600; color: #f2f2ef; margin-bottom: 0.625rem; letter-spacing: -0.02em; }
     .prop-cta-titulo em { font-style: normal; color: #7ef474; }
-    .prop-cta-sub { font-size: 13px; color: #b0b0ac; font-weight: 300; margin-bottom: 0.75rem; }
-    .prop-cta-action { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7ef474; letter-spacing: 0.06em; }
-    .prop-divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.08); margin: 1.75rem 0; }
-    .doc-footer { margin-top: 3rem; padding-top: 1rem; border-top: 0.5px solid #e0e0e0; font-size: 10px; color: #aaa; text-align: center; letter-spacing: 0.04em; }
+    .prop-cta-sub { font-size: 14px; color: #787874; font-weight: 300; margin-bottom: 0; }
+    .prop-divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.08); margin: 2rem 0; }
+    .prop-anim { opacity: 1; transform: none; }
+    .prop-inner { }
+    .doc-footer { margin-top: 3rem; padding-top: 1rem; border-top: 0.5px solid #e0e0e0; font-size: 10px; color: #aaa; text-align: center; }
     @media print { body { padding: 1.5rem; } }
   </style></head><body>
   <div class="doc-header">
@@ -1021,10 +1017,16 @@ function printPDF() {
     <div class="doc-meta">rioabierto.co · ${fecha} · Confidencial</div>
   </div>
   ${html}
-  <div class="doc-footer">Río Abierto · rioabierto.co · Confidencial · Propuesta generada con IA en sesión de diagnóstico</div>
-  </body></html>`);
-  w.document.close();
-  setTimeout(() => w.print(), 500);
+  <div class="doc-footer">Río Abierto · rioabierto.co · Confidencial · Propuesta generada con IA</div>
+  </body></html>`;
+
+  const blob = new Blob([fullHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
 }
 </script>
 </body>
