@@ -20,6 +20,9 @@ module.exports = async function handler(req, res) {
     // Parse body if it's a string
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
 
+    // Model is defined here — update this when Anthropic releases new versions
+    const payload = { ...body, model: 'claude-sonnet-4-6' };
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -27,7 +30,7 @@ module.exports = async function handler(req, res) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(payload)
     });
 
     const data = await response.json();
