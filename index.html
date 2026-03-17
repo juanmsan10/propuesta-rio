@@ -671,6 +671,7 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin markdown ni texto adicional
       })
     });
     const data = await res.json();
+    if (!data.content) throw new Error(JSON.stringify(data));
     const raw = data.content.map(b => b.text||'').join('').replace(/```json|```/g,'').trim();
     analysisData = JSON.parse(raw);
     renderAnalysis(analysisData);
