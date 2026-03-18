@@ -652,12 +652,12 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin markdown ni texto adicional
   "industria": "sector o industria",
   "facturacion": "facturación anual mencionada o estimada en USD",
   "empleados": "número de empleados",
-  "horas_dueno": número estimado de horas semanales del dueño en tareas operativas,
+  "costo_desorden": "estimado del costo colectivo del desorden: horas semanales del equipo en reprocesos, rotación, negocios perdidos — describe en 1-2 frases concretas usando lo que dijo el cliente","
   "perdida_negocio": "descripción concreta si perdieron negocios o dinero por el desorden, vacío si no mencionaron",
-  "problema_1": { "titulo": "nombre corto impactante", "descripcion": "dolor específico en palabras del cliente", "solucion": "qué instala Río Abierto para resolverlo", "nivel": 1 },
-  "problema_2": { "titulo": "nombre corto impactante", "descripcion": "dolor específico en palabras del cliente", "solucion": "qué instala Río Abierto para resolverlo", "nivel": 2 },
-  "problema_3": { "titulo": "nombre corto impactante", "descripcion": "dolor específico en palabras del cliente", "solucion": "qué instala Río Abierto para resolverlo", "nivel": 1 },
-  "frase_espejo": "2-3 líneas que resumen el problema central del cliente usando sus propias palabras, hablándole directo a él"
+  "problema_1": { "titulo": "nombre corto impactante", "descripcion": "dolor específico en palabras del cliente", "solucion": "qué instala Río Abierto para resolverlo", "nivel": elige el nivel correcto según la solución: 1=Automatización procesos repetitivos, 2=Agente IA con criterio o lenguaje natural, 3=Software personalizado con múltiples usuarios },
+  "problema_2": { "titulo": "nombre corto impactante", "descripcion": "dolor específico en palabras del cliente", "solucion": "qué instala Río Abierto para resolverlo", "nivel": elige el nivel correcto según la solución: 1=Automatización procesos repetitivos, 2=Agente IA con criterio o lenguaje natural, 3=Software personalizado con múltiples usuarios },
+  "problema_3": { "titulo": "nombre corto impactante", "descripcion": "dolor específico en palabras del cliente", "solucion": "qué instala Río Abierto para resolverlo", "nivel": elige el nivel correcto según la solución: 1=Automatización procesos repetitivos, 2=Agente IA con criterio o lenguaje natural, 3=Software personalizado con múltiples usuarios },
+  "frase_espejo": "2-3 líneas dirigidas directamente al cliente en segunda persona (tú/ustedes), usando sus propias palabras para describir el problema central. Que suene a que los conoces: su sector, su tamaño, su desorden específico. Ej: 'Llevan años cargando con procesos que dependen de personas específicas...'"
 }`;
 
   try {
@@ -707,7 +707,7 @@ function renderAnalysis(d) {
       </div>
       <div class="a-card a-full">
         <div class="a-label">Costo del desorden</div>
-        <div class="a-value">${d.horas_dueno||'?'} horas/semana del dueño en operación${d.perdida_negocio ? '<br><span style="color:var(--red);font-size:13px;font-weight:300;">⚠ ' + d.perdida_negocio + '</span>' : ''}</div>
+        <div class="a-value">${d.costo_desorden||'Sin datos'}${d.perdida_negocio ? '<br><span style="color:var(--red);font-size:13px;font-weight:300;">⚠ ' + d.perdida_negocio + '</span>' : ''}</div>
       </div>
     </div>
     <div>
@@ -766,31 +766,31 @@ Genera una propuesta comercial. Responde ÚNICAMENTE con un objeto JSON válido,
   "industria": "sector o industria del cliente",
   "contacto": "nombre contacto",
   "fecha": "fecha de hoy en español largo: ej. 17 de marzo de 2026",
-  "espejo": "2-3 frases en tercera persona que describen el problema del cliente sin hablarle directamente. Ej: 'Carlos lleva años siendo el único capaz de resolver...' — narrativo, como si lo presentaras a un tercero",
+  "espejo": "2-3 frases dirigidas directamente al cliente en segunda persona (tú/ustedes). Usa sus propias palabras del análisis. Que sienta que lo entendiste. Ej: 'Llevan años con procesos que solo conocen dos personas del equipo, y cuando una sale, el caos se repite...' — directo, específico, sin genérico.",
   "problema_1": {
     "titulo": "título corto impactante",
     "dolor": "dolor en 2-3 frases, coloquial, específico al cliente",
     "solucion": "qué instala exactamente Río Abierto, concreto",
-    "nivel": 1,
-    "nivel_nombre": "Automatización",
+    "nivel": número entero inferido: 1=Automatización, 2=Agente IA, 3=Software personalizado,
+    "nivel_nombre": nombre correspondiente al nivel inferido,
     "complejidad": "simple o media o alta",
-    "precio": número entero en USD
+    "precio": número entero en USD según tabla
   },
   "problema_2": {
     "titulo": "título corto impactante",
     "dolor": "dolor en 2-3 frases, coloquial, específico al cliente",
     "solucion": "qué instala exactamente Río Abierto, concreto",
-    "nivel": 2,
-    "nivel_nombre": "Agente IA",
+    "nivel": número entero inferido: 1=Automatización, 2=Agente IA, 3=Software personalizado,
+    "nivel_nombre": nombre correspondiente al nivel inferido,
     "complejidad": "simple o media o alta",
-    "precio": número entero en USD
+    "precio": número entero en USD según tabla
   },
   "problema_3": {
     "titulo": "título corto impactante",
     "dolor": "dolor en 2-3 frases, coloquial, específico al cliente",
     "solucion": "qué instala exactamente Río Abierto, concreto",
-    "nivel": 1,
-    "nivel_nombre": "Automatización",
+    "nivel": número entero inferido: 1=Automatización, 2=Agente IA, 3=Software personalizado,
+    "nivel_nombre": nombre correspondiente al nivel inferido,
     "complejidad": "simple o media o alta",
     "precio": número entero en USD
   },
@@ -808,7 +808,7 @@ Genera una propuesta comercial. Responde ÚNICAMENTE con un objeto JSON válido,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1200,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
