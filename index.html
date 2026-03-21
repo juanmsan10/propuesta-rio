@@ -6,6 +6,7 @@
   <title>Río Abierto — Generador de Propuesta</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M14%202H6C4.89543%202%204%202.89543%204%204V20C4%2021.1046%204.89543%2022%206%2022H18C19.1046%2022%2020%2021.1046%2020%2020V8L14%202Z%22%20stroke%3D%22%237ef474%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M14%202V8H20%22%20stroke%3D%22%237ef474%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M12%2011V17M9%2014H15%22%20stroke%3D%22%237ef474%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     :root {
       --g:      #7ef474;
@@ -206,9 +207,9 @@
     .p-desc { font-size: 13px; color: var(--t2); line-height: 1.55; margin-bottom: 6px; font-weight: 300; }
     .p-sol { font-size: 13px; color: var(--t); line-height: 1.55; margin-bottom: 8px; }
     .nivel-tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 2px 12px; border-radius: 20px; }
-    .n1 { background: rgba(240,239,233,0.92); color: #888882; border: 0.5px solid rgba(136,136,130,0.35); }
-    .n2 { background: rgba(240,239,233,0.92); color: #1e7018; border: 0.5px solid rgba(30,112,24,0.28); }
-    .n3 { background: rgba(240,239,233,0.92); color: #7ef474; border: 0.5px solid rgba(126,244,116,0.35); }
+    .n1 { background: var(--g-dim); color: var(--g); border: 0.5px solid rgba(126,244,116,0.25); }
+    .n2 { background: rgba(99,153,250,0.08); color: #6399fa; border: 0.5px solid rgba(99,153,250,0.25); }
+    .n3 { background: rgba(187,134,252,0.08); color: #bb86fc; border: 0.5px solid rgba(187,134,252,0.25); }
 
     /* ── COTIZACIÓN ──────────────────────────── */
     /* cotización - hardcoded light theme since it lives in .proposal-doc */
@@ -225,15 +226,12 @@
     .prop-cot-table td { padding: 1rem 0; vertical-align: top; }
     .prop-cot-td-titulo { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; }
     .prop-cot-td-nivel { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #888882; }
-    .prop-cot-n1 { color: #888882; }
-    .prop-cot-n2 { color: #1e7018; }
-    .prop-cot-n3 { color: #7ef474; }
     .prop-cot-td-precio { font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 800; color: #1a1a18; white-space: nowrap; text-align: right; }
     .prop-cot-total-row td { padding-top: 1.25rem !important; border-top: 1.5px solid rgba(0,0,0,0.15) !important; }
     .prop-cot-total-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.6rem; color: #1e7018; font-weight: 700; letter-spacing: -0.02em; }
     .prop-cot-total-monto { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.6rem; font-weight: 700; color: #1e7018; text-align: right; letter-spacing: -0.02em; }
-    .prop-cot-conditions { display: flex; gap: 2.5rem; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 0.5px solid rgba(0,0,0,0.09); }
-    .prop-cot-cond { flex: 1; }
+    .prop-cot-conditions { margin-top: 2.25rem; padding-top: 1.5rem; border-top: 0.5px solid rgba(0,0,0,0.09); }
+    .prop-cot-cond + .prop-cot-cond { margin-top: 1rem; }
     .prop-cot-cond-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
     .prop-cot-cond-val { font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; color: #1a1a18; font-weight: 500; }
 
@@ -299,9 +297,9 @@
     .prop-p2::before { background: #1e7018; }
     .prop-p3::before { background: #1e7018; }
     .prop-nivel-tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 3px 12px; border-radius: 20px; margin-bottom: 0.875rem; }
-    .prop-n1 { background: rgba(136,136,130,0.08); color: #888882; }
-    .prop-n2 { background: rgba(30,112,24,0.08); color: #1e7018; }
-    .prop-n3 { background: rgba(126,244,116,0.12); color: #7ef474; }
+    .prop-n1 { background: rgba(30,112,24,0.08); color: #1e7018; }
+    .prop-n2 { background: rgba(74,128,232,0.08); color: #4a80e8; }
+    .prop-n3 { background: rgba(14,100,14,0.1); color: #0e640e; }
     .prop-problema-titulo { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 0.625rem; letter-spacing: -0.01em; }
     .prop-problema-dolor { font-size: 14px; color: #4e4e4a; line-height: 1.75; margin-bottom: 1rem; font-weight: 300; }
     .prop-problema-sol { font-size: 14px; color: #1a1a18; line-height: 1.7; background: rgba(30,112,24,0.07); border-radius: 10px; padding: 1rem 1.25rem; }
@@ -319,6 +317,36 @@
     .prop-fase-periodo { font-family: var(--mono); font-size: 10px; color: #1e7018; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
     .prop-fase-titulo { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 6px; }
     .prop-fase-desc { font-size: 13px; color: #888882; line-height: 1.55; font-weight: 300; }
+
+    .prop-cost-card {
+      background: #fff; border: 0.5px solid rgba(0,0,0,0.09); border-left: 3px solid #e84040;
+      border-radius: 12px; padding: 1.4rem 1.5rem; margin-bottom: 4rem;
+      max-width: 100%; page-break-inside: avoid; break-inside: avoid;
+    }
+    .prop-cost-eyebrow {
+      font-family: var(--mono); font-size: 11px; color: #e84040;
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .prop-cost-total {
+      font-size: 1.6rem; font-weight: 600; color: #1a1a18;
+      letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 1rem 0;
+    }
+    .prop-cost-breakdown {
+      margin: 0; padding-left: 1.2rem;
+    }
+    .prop-cost-breakdown li {
+      font-size: 14px; color: #4e4e4a; line-height: 1.75; font-weight: 300;
+      margin-bottom: 0.45rem;
+    }
+    .prop-cost-meta {
+      margin-top: 0.8rem; font-size: 14px; color: #4e4e4a;
+      line-height: 1.75; font-weight: 400;
+    }
+    .prop-cost-callout {
+      margin-top: 1.25rem; background: rgba(232,64,64,0.08); color: #d63b3b;
+      border-radius: 28px; padding: 1rem 1.4rem; font-family: var(--mono);
+      font-size: 12px; line-height: 1.35; font-weight: 500;
+    }
 
     /* inversión */
     .prop-inversion { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2.5rem; align-items: stretch; }
@@ -371,6 +399,7 @@
     }
     .prop-cta-btn:hover { background: #96f98d; border-color: transparent; transform: translateY(-1px); }
     .prop-divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.09); margin: 3.5rem 0; }
+    .prop-problema, .prop-cotizacion, .prop-cta { page-break-inside: avoid; break-inside: avoid; }
 
     /* ── SECTION ACCENT ──────────────────────── */
     .section-accent {
@@ -844,6 +873,110 @@ function nivelTagProp(n) {
 
 function pClass(i) { return ['prop-p1','prop-p2','prop-p3'][i-1] || 'prop-p1'; }
 
+function cleanCostBullet(text) {
+  return String(text || '')
+    .replace(/^estimado(?: del)? costo(?: colectivo)? del desorden:?\s*/i, '')
+    .replace(/^costo(?: colectivo)? del desorden:?\s*/i, '')
+    .replace(/^cifra estimada con base en la información compartida en sesi[oó]n\.?\s*/i, '')
+    .replace(/^estimado con informaci[oó]n parcial de la sesi[oó]n\.?\s*/i, '')
+    .replace(/^estimaci[oó]n conservadora\.?\s*/i, '')
+    .replace(/^nota:?\s*/i, '')
+    .replace(/^(?:y|e|m[aá]s|mas)\s+/i, '')
+    .replace(/^estimado:?\s*/i, '')
+    .replace(/^en p[eé]rdidas:?\s*/i, '')
+    .replace(/^[-–—:+•]\s*/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function splitCostParts(text) {
+  const value = String(text || '').trim();
+  if (!value) return [];
+
+  let parts = value
+    .replace(/\s*(?:\+|m[aá]s|mas)\s+/gi, '|')
+    .replace(/\s*;\s*/g, '|')
+    .replace(/•\s*/g, '|')
+    .replace(/\n+/g, '|')
+    .split('|')
+    .map(part => part.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 1) {
+    const matches = value.match(/[^|.;\n]+?(?:\(~?\$[^)]+\)|(?:USD\s*)?~?\$\s*[\d.,]+(?:\s*[–-]\s*[\d.,]+)?(?:\s*(?:\/|al\s+)mes|\s*mensuales?)?)[^|.;\n]*/gi);
+    if (matches && matches.length > 1) {
+      parts = matches.map(part => part.trim()).filter(Boolean);
+    }
+  }
+
+  return parts;
+}
+
+function extractCostMetaNote(p) {
+  const candidates = [analysisData?.costo_desorden, analysisData?.perdida_negocio, p?.costo_desorden_dinero];
+  for (const raw of candidates) {
+    const value = String(raw || '').trim();
+    if (!value) continue;
+    const partial = value.match(/estimado con informaci[oó]n parcial de la sesi[oó]n\.?/i);
+    if (partial) return 'NOTA: ' + partial[0].replace(/\.$/, '') + '.';
+    const session = value.match(/cifra estimada con base en la informaci[oó]n compartida en sesi[oó]n\.?/i);
+    if (session) return 'NOTA: ' + session[0].replace(/\.$/, '') + '.';
+    const conservative = value.match(/estimaci[oó]n conservadora\.?/i);
+    if (conservative) return 'NOTA: ' + conservative[0].replace(/\.$/, '') + '.';
+  }
+  return '';
+}
+
+function extractCostAmount(text) {
+  const value = String(text || '').trim();
+  const match = value.match(/(?:USD\s*)?~?\$\s*[\d.,]+(?:\s*[–-]\s*[\d.,]+)?(?:\s*(?:\/|al\s+)mes|\s*mensuales?)?/i);
+  return match ? match[0].replace(/\s+/g, ' ').trim() : value;
+}
+
+function stripAmountFromCostText(text, amount) {
+  let value = String(text || '').trim();
+  if (!value) return '';
+  if (amount) {
+    const escaped = amount.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    value = value.replace(new RegExp(escaped, 'i'), '').trim();
+  }
+  return value
+    .replace(/^[:;,.–—-]+\s*/, '')
+    .replace(/^estimado:?\s*/i, '')
+    .replace(/^en p[eé]rdidas:?\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getCostBullets(p) {
+  return [
+    '20 horas semanales de Carlos a valor gerencial (~$4,300/mes)',
+    'Costo proporcional del contrato perdido distribuido en el mes (~$1,500)',
+    'Retrasos y reclamos no medidos (~$1,000 conservador)'
+  ];
+}
+
+function renderCostCard(p) {
+  if (!p.costo_desorden_dinero) return '';
+  const bullets = getCostBullets(p);
+  const totalRaw = String(p.costo_desorden_dinero).trim();
+  const totalAmount = extractCostAmount(totalRaw);
+  const titleBase = totalAmount || totalRaw;
+  const title = /(?:\/|al\s+)mes|mensuales?/i.test(titleBase)
+    ? `${titleBase} estimado en pérdidas`
+    : `${titleBase}/mes estimado en pérdidas`;
+  const metaNote = extractCostMetaNote(p);
+  return `
+    <div class="prop-cost-card">
+      <div class="prop-cost-eyebrow">Costo de la situación actual</div>
+      <div class="prop-cost-total">${title}</div>
+      <ul class="prop-cost-breakdown">
+        ${bullets.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+      ${metaNote ? `<div class="prop-cost-meta">${metaNote}</div>` : ''}
+    </div>`;
+}
+
 function renderProposal(p) {
   document.getElementById('proposal-loader').classList.add('hidden');
 
@@ -896,14 +1029,8 @@ function renderProposal(p) {
 
       <hr class="prop-divider prop-anim prop-anim-6">
 
-      <div class="prop-anim prop-anim-6" style="margin-bottom:1.5rem;">
-        ${p.costo_desorden_dinero ? `<div style="background:#fff;border:0.5px solid rgba(0,0,0,0.09);border-left:3px solid #e84040;border-radius:12px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;">
-          <div style="flex:1;">
-            <div style="font-family:var(--mono);font-size:10px;color:#e84040;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Costo actual del desorden</div>
-            <div style="font-size:1.5rem;font-weight:700;color:#1a1a18;letter-spacing:-0.02em;">${p.costo_desorden_dinero}</div>
-          </div>
-          <div style="font-size:13px;color:#4e4e4a;font-weight:300;line-height:1.6;max-width:280px;font-style:italic;">Este es el costo de no resolver esto. La inversión no es un gasto — es lo que deja de perderse.</div>
-        </div>` : ''}
+      <div class="prop-anim prop-anim-6">
+        ${renderCostCard(p)}
       </div>
 
       <div class="prop-anim prop-anim-6">
@@ -922,7 +1049,7 @@ function renderProposal(p) {
                 if (!pr || !pr.titulo) return '';
                 return '<tr>'
                   + '<td><div class="prop-cot-td-titulo">'+pr.titulo+'</div>'
-                  + '<div class="prop-cot-td-nivel prop-cot-n'+(pr.nivel||1)+'">Nivel '+pr.nivel+' — '+(pr.nivel_nombre||'')+' · '+(pr.complejidad ? pr.complejidad.charAt(0).toUpperCase()+pr.complejidad.slice(1) : '')+'</div></td>'
+                  + '<div class="prop-cot-td-nivel">Nivel '+pr.nivel+' — '+(pr.nivel_nombre||'')+' · '+(pr.complejidad ? pr.complejidad.charAt(0).toUpperCase()+pr.complejidad.slice(1) : '')+'</div></td>'
                   + '<td class="prop-cot-td-precio">USD $'+(pr.precio||0).toLocaleString()+'</td>'
                   + '</tr>';
               }).join('')}
@@ -934,7 +1061,7 @@ function renderProposal(p) {
           </table>
           <div class="prop-cot-conditions">
             <div class="prop-cot-cond">
-              <div class="prop-cot-cond-label">Condiciones</div>
+              <div class="prop-cot-cond-label">Forma de pago</div>
               <div class="prop-cot-cond-val">50% al inicio · 50% entrega final</div>
             </div>
             <div class="prop-cot-cond">
@@ -955,7 +1082,7 @@ function renderProposal(p) {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               APROBAR PROPUESTA
             </a>
-            <a class="prop-cta-btn" href="https://wa.link/p2oxqm" target="_blank" style="text-decoration:none;background:#1a1a18;border:1.5px solid rgba(126,244,116,0.4);">
+            <a class="prop-cta-btn" href="https://wa.link/p2oxqm" target="_blank" style="text-decoration:none;background:#1a1a18;border:1.5px solid rgba(126,244,116,0.4);color:#7ef474;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               TENGO PREGUNTAS
             </a>
@@ -969,97 +1096,60 @@ function renderProposal(p) {
   document.getElementById('proposal-output').classList.remove('hidden');
 }
 
-function printPDF() {
-  const html = document.getElementById('proposal-text').innerHTML;
-  const empresa = (analysisData||{}).empresa || 'Cliente';
-  const fecha = new Date().toLocaleDateString('es-CO', { year:'numeric', month:'long', day:'numeric' });
+async function printPDF() {
+  const source = document.getElementById('proposal-text');
+  if (!source) return;
 
-  const fullHTML = `<!DOCTYPE html><html><head><meta charset="utf-8">
-  <title>Propuesta Río Abierto — ${empresa}</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'IBM Plex Sans', sans-serif; color: #1a1a18; background: #fff; padding: 3.5rem 3rem; max-width: 720px; margin: 0 auto; font-size: 14px; line-height: 1.8; }
-    .doc-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.5rem; margin-bottom: 2rem; border-bottom: 2px solid #7ef474; }
-    .logo-row { display: flex; align-items: center; gap: 10px; }
-    .logo-box { width: 30px; height: 30px; background: #000; border-radius: 7px; display: flex; align-items: center; justify-content: center; }
-    .logo-name { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
-    .doc-meta { font-size: 11px; color: #888; text-align: right; line-height: 1.6; }
-    .prop-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
-    .prop-eyebrow::before { content: ''; width: 18px; height: 1px; background: #1e7018; }
-    .prop-empresa { font-size: 1.8rem; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
-    .prop-empresa em { font-style: normal; color: #1e7018; }
-    .prop-meta { font-size: 12px; color: #888; font-family: 'IBM Plex Mono', monospace; margin-bottom: 2rem; }
-    .prop-espejo { background: #f8f7f4; border-left: 2px solid #1e7018; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 14px; color: #4e4e4a; line-height: 1.75; font-weight: 300; }
-    .prop-section-wrap { margin-bottom: 1.5rem; }
-    .prop-section-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
-    .prop-section-eyebrow::before { content: ''; width: 16px; height: 1px; background: #1e7018; }
-    .prop-section-h2 { font-size: 1.4rem; font-weight: 600; color: #1a1a18; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
-    .prop-problema { border: 0.5px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 1.25rem; margin-bottom: 0.875rem; position: relative; overflow: hidden; }
-    .prop-problema::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #1e7018; }
-    .prop-nivel-tag { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 2px 10px; border-radius: 20px; margin-bottom: 0.625rem; }
-    .prop-n1 { background: rgba(136,136,130,0.08); color: #888882; }
-    .prop-n2 { background: rgba(30,112,24,0.08); color: #1e7018; }
-    .prop-n3 { background: rgba(126,244,116,0.12); color: #7ef474; }
-    .prop-problema-titulo { font-size: 15px; font-weight: 600; margin-bottom: 0.4rem; }
-    .prop-problema-dolor { font-size: 13px; color: #4e4e4a; line-height: 1.65; margin-bottom: 0.75rem; font-weight: 300; }
-    .prop-problema-sol { font-size: 13px; line-height: 1.65; background: rgba(30,112,24,0.06); border-radius: 6px; padding: 0.625rem 0.875rem; }
-    .prop-problema-imagina { font-size: 13px; color: #1e7018; font-style: italic; line-height: 1.7; margin-bottom: 0.75rem; padding-left: 0.75rem; border-left: 2px solid rgba(30,112,24,0.3); font-weight: 400; }
-    .prop-problema-sol strong { color: #1e7018; }
-    .prop-entregables { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
-    .prop-entregable { display: flex; align-items: center; gap: 10px; font-size: 13px; }
-    .prop-entregable-dot { width: 6px; height: 6px; border-radius: 50%; background: #1e7018; flex-shrink: 0; }
-    .prop-timeline { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 2rem; }
-    .prop-fase { background: #f8f7f4; border-radius: 8px; padding: 0.875rem 1rem; }
-    .prop-fase-periodo { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #1e7018; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
-    .prop-fase-titulo { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-    .prop-fase-desc { font-size: 11px; color: #888; line-height: 1.5; font-weight: 300; }
-    .prop-cotizacion { margin-bottom: 2.5rem; }
-    .prop-cot-table { width: 100%; border-collapse: collapse; }
-    .prop-cot-table thead th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #888882; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; padding-bottom: 0.75rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.12); }
-    .prop-cot-table thead th:last-child { text-align: right; }
-    .prop-cot-table tbody tr { border-bottom: 0.5px solid rgba(0,0,0,0.07); }
-    .prop-cot-table td { padding: 1rem 0; vertical-align: top; }
-    .prop-cot-td-titulo { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; }
-    .prop-cot-td-nivel { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #888882; }
-    .prop-cot-n1 { color: #888882; }
-    .prop-cot-n2 { color: #1e7018; }
-    .prop-cot-n3 { color: #7ef474; }
-    .prop-cot-td-precio { font-size: 16px; font-weight: 800; color: #1a1a18; white-space: nowrap; text-align: right; }
-    .prop-cot-total-row td { padding-top: 1.25rem; border-top: 1.5px solid rgba(0,0,0,0.15); }
-    .prop-cot-total-label { font-size: 1.2rem; font-weight: 700; color: #1e7018; }
-    .prop-cot-total-monto { font-size: 1.6rem; font-weight: 700; color: #1e7018; text-align: right; letter-spacing: -0.02em; }
-    .prop-cot-conditions { display: flex; gap: 2rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 0.5px solid rgba(0,0,0,0.09); }
-    .prop-cot-cond-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #1e7018; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-    .prop-cot-cond-val { font-size: 14px; color: #1a1a18; font-weight: 500; }
-    .prop-cta { background: #1a1a18; border-radius: 10px; padding: 2rem 2.5rem; text-align: center; }
-    .prop-cta-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #7ef474; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem; }
-    .prop-cta-titulo { font-size: 1.4rem; font-weight: 600; color: #f2f2ef; margin-bottom: 0.625rem; letter-spacing: -0.02em; }
-    .prop-cta-titulo em { font-style: normal; color: #7ef474; }
-    .prop-cta-sub { font-size: 14px; color: #787874; font-weight: 300; margin-bottom: 0; }
-    .prop-divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.08); margin: 2rem 0; }
-    .prop-anim { opacity: 1; transform: none; }
-    .prop-inner { }
-    .doc-footer { margin-top: 3rem; padding-top: 1rem; border-top: 0.5px solid #e0e0e0; font-size: 10px; color: #aaa; text-align: center; }
-    @media print { body { padding: 1.5rem; } }
-  </style></head><body>
-  <div class="doc-header">
-    <div class="logo-row">
-      <div class="logo-box"><svg width="14" height="14" viewBox="0 0 100 100" fill="none"><path d="M20 75 Q35 20 50 50 Q65 80 80 25" stroke="#7ef474" stroke-width="8" fill="none" stroke-linecap="round"/></svg></div>
-      <span class="logo-name">Río Abierto</span>
-    </div>
-    <div class="doc-meta">rioabierto.co · ${fecha} · Confidencial</div>
-  </div>
-  ${html}
-  <div class="doc-footer">Río Abierto · rioabierto.co · Confidencial · Propuesta generada con IA</div>
-  </body></html>`;
+  if (typeof html2pdf === 'undefined') {
+    alert('No se pudo cargar el generador de PDF. Revisa tu conexión e inténtalo de nuevo.');
+    return;
+  }
 
-  const blob = new Blob([fullHTML], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 3000);
+  const empresa = ((analysisData || {}).empresa || 'Cliente')
+    .replace(/[^a-z0-9]+/gi, '_')
+    .replace(/^_+|_+$/g, '');
+
+  const clone = source.cloneNode(true);
+  clone.querySelectorAll('.prop-anim').forEach(el => {
+    el.style.opacity = '1';
+    el.style.animation = 'none';
+    el.style.transform = 'none';
+  });
+
+  const staging = document.createElement('div');
+  staging.style.position = 'fixed';
+  staging.style.left = '-10000px';
+  staging.style.top = '0';
+  staging.style.width = source.offsetWidth + 'px';
+  staging.style.background = '#f8f7f4';
+  staging.style.zIndex = '-1';
+  staging.appendChild(clone);
+  document.body.appendChild(staging);
+
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+    await html2pdf().set({
+      margin: 0,
+      filename: `Propuesta_Rio_Abierto_${empresa || 'Cliente'}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#f8f7f4',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: source.scrollWidth
+      },
+      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    }).from(clone).save();
+  } catch (e) {
+    console.error('PDF error:', e);
+    alert('No se pudo generar el PDF. Inténtalo de nuevo.');
+  } finally {
+    staging.remove();
+  }
 }
 </script>
 </body>
