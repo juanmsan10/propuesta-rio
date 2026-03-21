@@ -320,27 +320,23 @@
 
     .prop-cost-card {
       background: #fff; border: 0.5px solid rgba(0,0,0,0.09); border-left: 3px solid #e84040;
-      border-radius: 12px; padding: 1.15rem 1.35rem; margin-bottom: 3rem;
+      border-radius: 12px; padding: 1.4rem 1.5rem; margin-bottom: 3rem;
       max-width: 100%; page-break-inside: avoid; break-inside: avoid;
     }
-    .prop-cost-label {
-      font-family: var(--mono); font-size: 10px; color: #e84040;
-      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.45rem;
-    }
     .prop-cost-total {
-      font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: #1a1a18;
-      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 0.75rem;
+      font-size: 1.6rem; font-weight: 600; color: #1a1a18;
+      letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 0.95rem;
     }
     .prop-cost-breakdown {
-      margin: 0; padding-left: 1.1rem;
+      margin: 0; padding-left: 1.2rem;
     }
     .prop-cost-breakdown li {
-      font-size: 12px; color: #4e4e4a; line-height: 1.55; font-weight: 400;
-      margin-bottom: 0.35rem;
+      font-size: 14px; color: #4e4e4a; line-height: 1.75; font-weight: 300;
+      margin-bottom: 0.45rem;
     }
     .prop-cost-note {
-      margin-top: 0.8rem; font-size: 12px; color: #66625d;
-      line-height: 1.55; font-weight: 300; font-style: italic;
+      margin-top: 1rem; padding-top: 1rem; border-top: 0.5px solid rgba(0,0,0,0.08);
+      font-size: 18px; color: #4e4e4a; line-height: 1.6; font-weight: 400; font-style: italic;
     }
 
     /* inversión */
@@ -908,10 +904,11 @@ function getCostBullets() {
 function renderCostCard(p) {
   if (!p.costo_desorden_dinero) return '';
   const bullets = getCostBullets();
+  const total = String(p.costo_desorden_dinero).trim();
+  const title = /\/mes/i.test(total) ? `${total} estimado en pérdidas` : `${total}/mes estimado en pérdidas`;
   return `
     <div class="prop-cost-card">
-      <div class="prop-cost-label">Costo actual del desorden</div>
-      <div class="prop-cost-total">${p.costo_desorden_dinero}</div>
+      <div class="prop-cost-total">${title}</div>
       <ul class="prop-cost-breakdown">
         ${bullets.map(item => `<li>${item}</li>`).join('')}
       </ul>
