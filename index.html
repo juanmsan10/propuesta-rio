@@ -345,7 +345,7 @@
     .prop-cost-callout {
       margin-top: 1.25rem; background: rgba(232,64,64,0.08); color: #d63b3b;
       border-radius: 28px; padding: 1rem 1.4rem; font-family: var(--mono);
-      font-size: 19px; line-height: 1.35; font-weight: 500;
+      font-size: 15px; line-height: 1.35; font-weight: 500;
     }
 
     /* inversión */
@@ -949,58 +949,11 @@ function stripAmountFromCostText(text, amount) {
 }
 
 function getCostBullets(p) {
-  const raw = [];
-  const d = analysisData || {};
-
-  if (d.costo_desorden) {
-    splitCostParts(d.costo_desorden).forEach(part => raw.push(part));
-  }
-
-  if (d.perdida_negocio) {
-    splitCostParts(d.perdida_negocio).forEach(part => raw.push(part));
-  }
-
-  if (!raw.length && p && p.costo_desorden_dinero) {
-    const amount = extractCostAmount(p.costo_desorden_dinero);
-    const remainder = stripAmountFromCostText(p.costo_desorden_dinero, amount);
-    splitCostParts(remainder).forEach(part => raw.push(part));
-  }
-
-  const bullets = [];
-  raw.forEach(part => {
-    if (/estimado con informaci[oó]n parcial de la sesi[oó]n/i.test(part)) return;
-    if (/cifra estimada con base en la informaci[oó]n compartida en sesi[oó]n/i.test(part)) return;
-    if (/estimaci[oó]n conservadora/i.test(part)) return;
-
-    const clean = cleanCostBullet(part);
-    if (!clean) return;
-
-    if (/(20\s*horas|horas\s+semanales|valor\s+gerencial|carlos)/i.test(clean)) {
-      const short = '20 horas semanales de Carlos a valor gerencial (~$4,300/mes)';
-      if (!bullets.includes(short)) bullets.push(short);
-      return;
-    }
-
-    if (/(contrato\s+perdido|perdieron\s+un\s+contrato|seguimiento\s+en\s+tiempo\s+real|trazabilidad)/i.test(clean)) {
-      const short = 'Costo proporcional del contrato perdido distribuido en el mes (~$1,500)';
-      if (!bullets.includes(short)) bullets.push(short);
-      return;
-    }
-
-    if (/(retrasos|reclamos|p[ée]rdidas\s+ocultas|no\s+tenemos\s+el\s+n[úu]mero|sin\s+costo\s+medido)/i.test(clean)) {
-      const short = 'Retrasos y reclamos no medidos (~$1,000 conservador)';
-      if (!bullets.includes(short)) bullets.push(short);
-      return;
-    }
-
-    if (!bullets.includes(clean)) bullets.push(clean);
-  });
-
-  if (!bullets.length) {
-    bullets.push('Horas gerenciales desviadas, reprocesos y oportunidades perdidas por el desorden operativo.');
-  }
-
-  return bullets.slice(0, 5);
+  return [
+    '20 horas semanales de Carlos a valor gerencial (~$4,300/mes)',
+    'Costo proporcional del contrato perdido distribuido en el mes (~$1,500)',
+    'Retrasos y reclamos no medidos (~$1,000 conservador)'
+  ];
 }
 
 function renderCostCard(p) {
