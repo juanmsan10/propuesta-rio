@@ -320,8 +320,12 @@
 
     .prop-cost-card {
       background: #fff; border: 0.5px solid rgba(0,0,0,0.09); border-left: 3px solid #e84040;
-      border-radius: 12px; padding: 1.4rem 1.5rem; margin-bottom: calc(4rem + 30px);
+      border-radius: 12px; padding: 1.4rem 1.5rem; margin-bottom: 4rem;
       max-width: 100%; page-break-inside: avoid; break-inside: avoid;
+    }
+    .prop-cost-eyebrow {
+      font-family: var(--mono); font-size: 11px; color: #e84040;
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem;
     }
     .prop-cost-total {
       font-size: 1.6rem; font-weight: 600; color: #1a1a18;
@@ -334,9 +338,14 @@
       font-size: 14px; color: #4e4e4a; line-height: 1.75; font-weight: 300;
       margin-bottom: 0.45rem;
     }
-    .prop-cost-note {
-      margin-top: 1.15rem; padding-top: 1.05rem; border-top: 0.5px solid rgba(0,0,0,0.08);
-      font-size: 16px; color: #3f3f3b; line-height: 1.55; font-weight: 400; font-style: italic;
+    .prop-cost-meta {
+      margin-top: 0.8rem; font-size: 14px; color: #4e4e4a;
+      line-height: 1.75; font-weight: 400;
+    }
+    .prop-cost-callout {
+      margin-top: 1.25rem; background: rgba(232,64,64,0.08); color: #d63b3b;
+      border-radius: 28px; padding: 1rem 1.4rem; font-family: var(--mono);
+      font-size: 16px; line-height: 1.35; font-weight: 500;
     }
 
     /* inversión */
@@ -868,27 +877,54 @@ function cleanCostBullet(text) {
   return String(text || '')
     .replace(/^estimado(?: del)? costo(?: colectivo)? del desorden:?\s*/i, '')
     .replace(/^costo(?: colectivo)? del desorden:?\s*/i, '')
-    .replace(/^cifra estimada con base en la información compartida en sesión\.?\s*/i, '')
+    .replace(/^cifra estimada con base en la información compartida en sesi[oó]n\.?\s*/i, '')
+    .replace(/^estimado con informaci[oó]n parcial de la sesi[oó]n\.?\s*/i, '')
     .replace(/^estimaci[oó]n conservadora\.?\s*/i, '')
+    .replace(/^nota:?\s*/i, '')
+    .replace(/^(?:y|e|m[aá]s|mas)\s+/i, '')
     .replace(/^estimado:?\s*/i, '')
     .replace(/^en p[eé]rdidas:?\s*/i, '')
-    .replace(/^(?:y|e|m[aá]s|mas)\s+/i, '')
     .replace(/^[-–—:+•]\s*/, '')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
 function splitCostParts(text) {
-  return String(text || '')
-    .replace(/[\n\r]+/g, '|')
-    .replace(/\s*[+＋]\s*/g, '|')
+  const value = String(text || '').trim();
+  if (!value) return [];
+
+  let parts = value
+    .replace(/\s*(?:\+|m[aá]s|mas)\s+/gi, '|')
     .replace(/\s*;\s*/g, '|')
     .replace(/•\s*/g, '|')
-    .replace(/\)\s*(?:,\s*)?(?:m[aá]s|mas)\s+/gi, ')|')
-    .replace(/(?:^|\s)(?:m[aá]s|mas)\s+/gi, '|')
+    .replace(/\n+/g, '|')
     .split('|')
     .map(part => part.trim())
     .filter(Boolean);
+
+  if (parts.length <= 1) {
+    const matches = value.match(/[^|.;\n]+?(?:\(~?\$[^)]+\)|(?:USD\s*)?~?\$\s*[\d.,]+(?:\s*[–-]\s*[\d.,]+)?(?:\s*(?:\/|al\s+)mes|\s*mensuales?)?)[^|.;\n]*/gi);
+    if (matches && matches.length > 1) {
+      parts = matches.map(part => part.trim()).filter(Boolean);
+    }
+  }
+
+  return parts;
+}
+
+function extractCostMetaNote(p) {
+  const candidates = [analysisData?.costo_desorden, analysisData?.perdida_negocio, p?.costo_desorden_dinero];
+  for (const raw of candidates) {
+    const value = String(raw || '').trim();
+    if (!value) continue;
+    const partial = value.match(/estimado con informaci[oó]n parcial de la sesi[oó]n\.?/i);
+    if (partial) return 'NOTA: ' + partial[0].replace(/\.$/, '') + '.';
+    const session = value.match(/cifra estimada con base en la informaci[oó]n compartida en sesi[oó]n\.?/i);
+    if (session) return 'NOTA: ' + session[0].replace(/\.$/, '') + '.';
+    const conservative = value.match(/estimaci[oó]n conservadora\.?/i);
+    if (conservative) return 'NOTA: ' + conservative[0].replace(/\.$/, '') + '.';
+  }
+  return '';
 }
 
 function extractCostAmount(text) {
@@ -920,7 +956,9 @@ function getCostBullets(p) {
     splitCostParts(d.costo_desorden).forEach(part => raw.push(part));
   }
 
-  if (d.perdida_negocio) raw.push(d.perdida_negocio);
+  if (d.perdida_negocio) {
+    splitCostParts(d.perdida_negocio).forEach(part => raw.push(part));
+  }
 
   if (!raw.length && p && p.costo_desorden_dinero) {
     const amount = extractCostAmount(p.costo_desorden_dinero);
@@ -930,19 +968,22 @@ function getCostBullets(p) {
 
   const bullets = [];
   raw.forEach(part => {
+    if (/estimado con informaci[oó]n parcial de la sesi[oó]n/i.test(part)) return;
+    if (/cifra estimada con base en la informaci[oó]n compartida en sesi[oó]n/i.test(part)) return;
+    if (/estimaci[oó]n conservadora/i.test(part)) return;
     const clean = cleanCostBullet(part);
     if (!clean) return;
-    if (/^cifra estimada con base en la informaci[oó]n compartida en sesi[oó]n\.?$/i.test(clean)) return;
-    if (/^estimado con informaci[oó]n parcial de la sesi[oó]n\.?$/i.test(clean)) return;
-    if (/^estimaci[oó]n conservadora\.?$/i.test(clean)) return;
-    if (!bullets.includes(clean)) bullets.push(clean);
+    splitCostParts(clean).forEach(subPart => {
+      const item = cleanCostBullet(subPart);
+      if (item && !bullets.includes(item)) bullets.push(item);
+    });
   });
 
   if (!bullets.length) {
     bullets.push('Horas gerenciales desviadas, reprocesos y oportunidades perdidas por el desorden operativo.');
   }
 
-  return bullets.slice(0, 4);
+  return bullets.slice(0, 5);
 }
 
 function renderCostCard(p) {
@@ -954,13 +995,16 @@ function renderCostCard(p) {
   const title = /(?:\/|al\s+)mes|mensuales?/i.test(titleBase)
     ? `${titleBase} estimado en pérdidas`
     : `${titleBase}/mes estimado en pérdidas`;
+  const metaNote = extractCostMetaNote(p);
   return `
     <div class="prop-cost-card">
+      <div class="prop-cost-eyebrow">Costo de la situación actual</div>
       <div class="prop-cost-total">${title}</div>
       <ul class="prop-cost-breakdown">
         ${bullets.map(item => `<li>${item}</li>`).join('')}
       </ul>
-      <div class="prop-cost-note">Este es el costo de no resolver esto. La inversión no es un gasto — es lo que deja de perderse.</div>
+      ${metaNote ? `<div class="prop-cost-meta">${metaNote}</div>` : ''}
+      <div class="prop-cost-callout">Esto es lo que les está costando no resolver el problema.</div>
     </div>`;
 }
 
