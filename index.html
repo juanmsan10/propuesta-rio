@@ -345,7 +345,7 @@
     .prop-cost-callout {
       margin-top: 1.25rem; background: rgba(232,64,64,0.08); color: #d63b3b;
       border-radius: 28px; padding: 1rem 1.4rem; font-family: var(--mono);
-      font-size: 16px; line-height: 1.35; font-weight: 500;
+      font-size: 22px; line-height: 1.35; font-weight: 500;
     }
 
     /* inversión */
@@ -972,11 +972,7 @@ function getCostBullets(p) {
     if (/cifra estimada con base en la informaci[oó]n compartida en sesi[oó]n/i.test(part)) return;
     if (/estimaci[oó]n conservadora/i.test(part)) return;
     const clean = cleanCostBullet(part);
-    if (!clean) return;
-    splitCostParts(clean).forEach(subPart => {
-      const item = cleanCostBullet(subPart);
-      if (item && !bullets.includes(item)) bullets.push(item);
-    });
+    if (clean && !bullets.includes(clean)) bullets.push(clean);
   });
 
   if (!bullets.length) {
