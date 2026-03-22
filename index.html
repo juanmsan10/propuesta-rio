@@ -206,10 +206,31 @@
     .p-name { font-size: 15px; font-weight: 600; color: var(--t); margin-bottom: 4px; }
     .p-desc { font-size: 13px; color: var(--t2); line-height: 1.55; margin-bottom: 6px; font-weight: 300; }
     .p-sol { font-size: 13px; color: var(--t); line-height: 1.55; margin-bottom: 8px; }
-    .nivel-tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 2px 12px; border-radius: 20px; }
-    .n1 { background: var(--g-dim); color: #888882; border: 0.5px solid rgba(126,244,116,0.25); }
-    .n2 { background: rgba(99,153,250,0.08); color: var(--g-dark); border: 0.5px solid rgba(99,153,250,0.25); }
-    .n3 { background: rgba(187,134,252,0.08); color: var(--g); border: 0.5px solid rgba(187,134,252,0.25); }
+    .nivel-tag {
+      display: inline-flex; align-items: center; min-height: 0;
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      padding: 5px 0.7rem; border-radius: 999px;
+      border: 1px solid currentColor; line-height: 1;
+      letter-spacing: 0.12em;
+    }
+    .n1 {
+      color: #8c8c88;
+      background: rgba(140,140,136,0.06);
+      border-color: rgba(140,140,136,0.38);
+      box-shadow: inset 0 0 12px rgba(140,140,136,0.03), 0 0 16px rgba(140,140,136,0.03);
+    }
+    .n2 {
+      color: #1e7018;
+      background: rgba(30,112,24,0.06);
+      border-color: rgba(30,112,24,0.34);
+      box-shadow: inset 0 0 12px rgba(30,112,24,0.03), 0 0 16px rgba(30,112,24,0.03);
+    }
+    .n3 {
+      color: var(--g);
+      background: rgba(126,244,116,0.08);
+      border-color: rgba(126,244,116,0.42);
+      box-shadow: inset 0 0 12px rgba(126,244,116,0.04), 0 0 16px rgba(126,244,116,0.04);
+    }
 
     /* ── COTIZACIÓN ──────────────────────────── */
     /* cotización - hardcoded light theme since it lives in .proposal-doc */
@@ -226,9 +247,6 @@
     .prop-cot-table td { padding: 1rem 0; vertical-align: top; }
     .prop-cot-td-titulo { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; }
     .prop-cot-td-nivel { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #888882; }
-    .prop-cot-td-nivel.prop-cot-n1 { color: #888882; }
-    .prop-cot-td-nivel.prop-cot-n2 { color: #1e7018; }
-    .prop-cot-td-nivel.prop-cot-n3 { color: #7ef474; }
     .prop-cot-td-precio { font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 800; color: #1a1a18; white-space: nowrap; text-align: right; }
     .prop-cot-total-row td { padding-top: 1.25rem !important; border-top: 1.5px solid rgba(0,0,0,0.15) !important; }
     .prop-cot-total-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.6rem; color: #1e7018; font-weight: 700; letter-spacing: -0.02em; }
@@ -299,10 +317,30 @@
     .prop-p1::before { background: #1e7018; }
     .prop-p2::before { background: #1e7018; }
     .prop-p3::before { background: #1e7018; }
-    .prop-nivel-tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 3px 12px; border-radius: 20px; margin-bottom: 0.875rem; }
-    .prop-n1 { background: rgba(30,112,24,0.08); color: #888882; }
-    .prop-n2 { background: rgba(74,128,232,0.08); color: #1e7018; }
-    .prop-n3 { background: rgba(14,100,14,0.1); color: #7ef474; }
+    .prop-nivel-tag {
+      display: inline-flex; align-items: center; min-height: 0;
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      padding: 5px 0.7rem; border-radius: 999px; margin-bottom: 0.875rem;
+      border: 1px solid currentColor; line-height: 1; letter-spacing: 0.12em;
+    }
+    .prop-n1 {
+      color: #8c8c88;
+      background: rgba(140,140,136,0.06);
+      border-color: rgba(140,140,136,0.38);
+      box-shadow: inset 0 0 12px rgba(140,140,136,0.03), 0 0 16px rgba(140,140,136,0.03);
+    }
+    .prop-n2 {
+      color: #1e7018;
+      background: rgba(30,112,24,0.06);
+      border-color: rgba(30,112,24,0.34);
+      box-shadow: inset 0 0 12px rgba(30,112,24,0.03), 0 0 16px rgba(30,112,24,0.03);
+    }
+    .prop-n3 {
+      color: var(--g);
+      background: rgba(126,244,116,0.08);
+      border-color: rgba(126,244,116,0.42);
+      box-shadow: inset 0 0 12px rgba(126,244,116,0.04), 0 0 16px rgba(126,244,116,0.04);
+    }
     .prop-problema-titulo { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 0.625rem; letter-spacing: -0.01em; }
     .prop-problema-dolor { font-size: 14px; color: #4e4e4a; line-height: 1.75; margin-bottom: 1rem; font-weight: 300; }
     .prop-problema-sol { font-size: 14px; color: #1a1a18; line-height: 1.7; background: rgba(30,112,24,0.07); border-radius: 10px; padding: 1rem 1.25rem; }
@@ -1052,7 +1090,7 @@ function renderProposal(p) {
                 if (!pr || !pr.titulo) return '';
                 return '<tr>'
                   + '<td><div class="prop-cot-td-titulo">'+pr.titulo+'</div>'
-                  + '<div class="prop-cot-td-nivel prop-cot-n'+pr.nivel+'">Nivel '+pr.nivel+' — '+(pr.nivel_nombre||'')+' · '+(pr.complejidad ? pr.complejidad.charAt(0).toUpperCase()+pr.complejidad.slice(1) : '')+'</div></td>'
+                  + '<div class="prop-cot-td-nivel">Nivel '+pr.nivel+' — '+(pr.nivel_nombre||'')+' · '+(pr.complejidad ? pr.complejidad.charAt(0).toUpperCase()+pr.complejidad.slice(1) : '')+'</div></td>'
                   + '<td class="prop-cot-td-precio">USD $'+(pr.precio||0).toLocaleString()+'</td>'
                   + '</tr>';
               }).join('')}
